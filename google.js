@@ -13,9 +13,10 @@ module.exports = {
         },
       }
     );
-      console.log(result.data)
-    let user = await SignUp.findOne({ googleId: result.data.sub });
-    if (user) {
+    let user = await SignUp.findOne({
+      where: {googleId: result.data.sub}
+     });
+    if (0) {
       const token = jwt.sign(
         {
           id: user.id,
@@ -26,26 +27,30 @@ module.exports = {
         },
         process.env.jwtPrivateKey
       );
+
       return res.send(token);
     } else {
-      const newUser = {
+      let newUser = {
         googleId: result.data.sub,
         email: result.data.email,
         firstname: result.data.given_name,
         lastname: result.data.family_name,
         picture: result.data.picture
       };
-      const user = await SignUp.create(newUser);
+      console.log(newUser.picture)
+      const User = await SignUp.create(newUser);
+
       const token = jwt.sign(
         {
-          id: user.id,
-          email: user.email,
-          firstname: user.firstname,
-          lastname: user.lastname,
-          picture:user.picture
+          id: User.id,
+          email: User.email,
+          firstname: User.firstname,
+          lastname: User.lastname,
+          picture:User.picture
         },
         process.env.jwtPrivateKey
       );
+      console.log(User.picture)
       return res.send(token);
     }
   },
