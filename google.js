@@ -13,7 +13,7 @@ module.exports = {
         },
       }
     );
-
+      console.log(result.data)
     let user = await SignUp.findOne({ googleId: result.data.sub });
     if (user) {
       const token = jwt.sign(
@@ -22,6 +22,7 @@ module.exports = {
           email: user.email,
           firstname: user.firstname,
           lastname: user.lastname,
+          picture:user.picture
         },
         process.env.jwtPrivateKey
       );
@@ -32,6 +33,7 @@ module.exports = {
         email: result.data.email,
         firstname: result.data.given_name,
         lastname: result.data.family_name,
+        picture: result.data.picture
       };
       const user = await SignUp.create(newUser);
       const token = jwt.sign(
@@ -40,6 +42,7 @@ module.exports = {
           email: user.email,
           firstname: user.firstname,
           lastname: user.lastname,
+          picture:user.picture
         },
         process.env.jwtPrivateKey
       );
